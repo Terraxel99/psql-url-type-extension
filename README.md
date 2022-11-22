@@ -29,10 +29,9 @@ In order to create a PostgreSQL extension, three files are essential :
 - The control file which contains informations about the extension such as version, location, description, ... .
 - SQL file which contains the functions definitions, casts, and more ... .
 - C file containing the code which will define the behaviour of the extension. This is the core of the extension.
+- Makefile to make the compilation process way easier and smoother.
 
-Additionally, a Makefile can be created in order to make the compilation process way easier and smoother, which we also included.
-
-Here is the structure of our project
+Here is the structure of our project :
 
 ```bash
 project
