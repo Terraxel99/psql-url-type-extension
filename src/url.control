@@ -1,0 +1,5 @@
+# URL extension
+comment = 'URL type support for PSQL'
+default_version = '1.0'
+module_pathname = '$libdir/url'
+relocatable = true
