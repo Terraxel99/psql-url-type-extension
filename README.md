@@ -24,7 +24,7 @@ To create such an extension, we have used plain C language for the functionality
 <a name="content"></a>
 
 ## Content & project structure
-In order to create a PostgreSQL extension, three files are essential :
+In order to create a PostgreSQL extension, four files are essential :
 
 - The control file which contains informations about the extension such as version, location, description, ... .
 - SQL file which contains the functions definitions, casts, and more ... .
