@@ -4,16 +4,16 @@ CREATE FUNCTION url_in(cstring) RETURNS url
     IMMUTABLE
     STRICT
     LANGUAGE C
-    AS '$libdir/uri';
+    AS '$libdir/url';
 
 CREATE FUNCTION url_out(url) RETURNS cstring
     IMMUTABLE
     STRICT
     LANGUAGE C
-    AS '$libdir/uri';
+    AS '$libdir/url';
 
-CREATE TYPE url {
+CREATE TYPE url (
     INPUT = url_in,
     OUTPUT = url_out
-};
+);
 COMMENT ON TYPE url IS 'URL written as a string';
