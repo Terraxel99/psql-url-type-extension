@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "./utils.c"
+
 #include "postgres.h"
 #include "fmgr.h"
 #include "urlType.h"
@@ -11,10 +13,11 @@ PG_MODULE_MAGIC;
 PG_FUNCTION_INFO_V1(url_in);
 Datum url_in(PG_FUNCTION_ARGS) {
     char* input = PG_GETARG_CSTRING(0); 
-
     UrlType *url = (UrlType *) palloc(sizeof(UrlType));
-    //SET_VARSIZE(url, sizeof);
 
+    str_to_url(input, url) //parse string -> url (utils)
+
+    //SET_VARSIZE(url, sizeof);
     memcpy(url->scheme, "https:", 7);
     memcpy(url->host, "//www.test.com", 15);
     memcpy(url->path, "/test", 6);
@@ -27,6 +30,7 @@ Datum url_in(PG_FUNCTION_ARGS) {
 
 PG_FUNCTION_INFO_V1(url_out);
 Datum url_out(PG_FUNCTION_ARGS) {
-    // Datum input = PG_GETARG_DATUM(0);
-    PG_RETURN_CSTRING("http://www.test.com:80/path/to/page?query=5#anchor");
+    Datum input = PG_GETARG_DATUM(0);
+	PG_RETURN_CSTRING(TextDatumGetCString(input));
+    //PG_RETURN_CSTRING("http://www.test.com:80/path/to/page?query=5#anchor");
 }
