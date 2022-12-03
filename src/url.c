@@ -30,7 +30,5 @@ Datum url_in(PG_FUNCTION_ARGS) {
 
 PG_FUNCTION_INFO_V1(url_out);
 Datum url_out(PG_FUNCTION_ARGS) {
-    Datum input = PG_GETARG_DATUM(0);
-	PG_RETURN_CSTRING(TextDatumGetCString(input));
-    //PG_RETURN_CSTRING("http://www.test.com:80/path/to/page?query=5#anchor");
+    PG_RETURN_CSTRING("http://www.test.com:80/path/to/page?query=5#anchoR");
 }
