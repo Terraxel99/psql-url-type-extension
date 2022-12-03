@@ -5,11 +5,11 @@
 
 typedef struct UrlType {
     int port;
-    char scheme[150];
-    char host[150];
-    char path[150];
-    char query[150];
-    char fragment[150];
+    char* scheme;
+    char* host;
+    char* path;
+    char* query;
+    char* fragment;
 } UrlType;
 
 // "http://www.test.com/test?query=5#anchor"
