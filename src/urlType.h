@@ -4,7 +4,7 @@
 #include "postgres.h"
 
 typedef struct UrlType {
-    int port;
+    char* port;
     char* scheme;
     char* host;
     char* path;
@@ -19,3 +19,5 @@ typedef struct UrlType {
 // "http://www.test.com"
 // "ftp://192.28.10.1/dossier/sous-dossier/thomas"
 void URL(UrlType* url, char* spec);
+void str_to_url(char url_string[], UrlType* url);
+void stringify(UrlType url);
