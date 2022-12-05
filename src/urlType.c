@@ -2,12 +2,12 @@
 #include <string.h>
 
 void URL(UrlType* url, char *spec) {
-    url->scheme = palloc(10*sizeof(char));
-    url->host = palloc(40*sizeof(char));
-    url->path = palloc(40*sizeof(char));
-    url->query = palloc(40*sizeof(char));
-    url->fragment = palloc(40*sizeof(char));
-    url->port = palloc(8*sizeof(char));
+    memcpy(url->scheme, "https:", 7);
+    memcpy(url->host, "//www.test.com", 15);
+    memcpy(url->path, "/test", 6);
+    url->port = 80;
+    memcpy(url->query, "?query=5", 9);
+    memcpy(url->fragment, "#anchor", 8);
 }
 
 void str_to_url(char url_string[], UrlType* url){
