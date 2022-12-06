@@ -54,7 +54,7 @@ Work in progress...
 This project has been created by 4 ULB students :
 
 - Gullentops Charlotte (ULBId : 463980)
-- ??? Julien (ULBId : )
+- Kohler Julien (ULBId : 521836)
 - Botond Horac Horvath(ULBId : 440356)
 - Dudziak Thomas (ULBId: 542286)
 
