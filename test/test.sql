@@ -9,11 +9,7 @@ CREATE TABLE test (
 );
 
 INSERT INTO test (Id, Url)
-VALUES  (1 ,'http://www.postgresql.org/'),
-        (2 ,'http://www.perdu.com/'),
-        (3 ,'http://www.test.com/'),
-        (4 ,'ftp://192.168.0.39/'),
-        (5 ,'https://en.cppreference.com/w/c');
+VALUES  (1 ,'http://www.test.com/test?query=5#anchor')
 
 SELECT * FROM test;
     
