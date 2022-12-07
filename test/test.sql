@@ -9,7 +9,8 @@ CREATE TABLE test (
 );
 
 INSERT INTO test (Id, Url)
-VALUES  (1 ,'http://www.test.com/test?query=5#anchor')
+VALUES  (1 ,'http://www.test.com/tesxxt?query=5#anchor'),
+VALUES  (2 ,'http://www.test.com/tesxxt');
 
 SELECT * FROM test;
     

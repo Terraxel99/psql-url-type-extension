@@ -4,12 +4,12 @@
 #include "postgres.h"
 
 typedef struct UrlType {
-    char* port;
-    char* scheme;
-    char* host;
-    char* path;
-    char* query;
-    char* fragment;
+    char port[55];
+    char scheme[55];
+    char host[55];
+    char path[55];
+    char query[55];
+    char fragment[55];
 } UrlType;
 
 // "http://www.test.com/test?query=5#anchor"
