@@ -4,7 +4,8 @@
 #include "postgres.h"
 
 typedef struct UrlType {
-    int port;
+    int length;
+    //int* port;
     char* scheme;
     char* host;
     char* path;

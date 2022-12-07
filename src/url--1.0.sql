@@ -17,3 +17,15 @@ CREATE TYPE url (
     OUTPUT = url_out
 );
 COMMENT ON TYPE url IS 'URL written as a string';
+
+CREATE FUNCTION url_scheme(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+CREATE FUNCTION url_authority(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
