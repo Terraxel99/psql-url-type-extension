@@ -18,13 +18,60 @@ CREATE TYPE url (
 );
 COMMENT ON TYPE url IS 'URL written as a string';
 
-CREATE FUNCTION url_scheme(url) RETURNS cstring
+CREATE FUNCTION url_scheme(url) RETURNS cstring 
     IMMUTABLE
     STRICT
     LANGUAGE C
     AS '$libdir/url';
 
 CREATE FUNCTION url_authority(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+
+CREATE FUNCTION url_host(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+
+CREATE FUNCTION url_path(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+CREATE FUNCTION url_port(url) RETURNS integer
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+
+CREATE FUNCTION url_file(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+
+CREATE FUNCTION url_protocol(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+
+CREATE FUNCTION url_query(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+CREATE FUNCTION url_ref(url) RETURNS cstring
     IMMUTABLE
     STRICT
     LANGUAGE C

@@ -43,13 +43,76 @@ Datum url_scheme(PG_FUNCTION_ARGS) {
     PG_RETURN_CSTRING(c);   
 }
 
-PG_FUNCTION_INFO_V1(url_authority);
+PG_FUNCTION_INFO_V1(url_authority); //host + port
 Datum url_authority(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+
+    char *c;
+    c = psprintf("%s:%d", url->host,url->port);
+
+    PG_RETURN_CSTRING(c);   
+}
+
+PG_FUNCTION_INFO_V1(url_host);
+Datum url_host(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
 
     char *c;
     c = psprintf("%s", url->host);
 
+    PG_RETURN_CSTRING(c);   
+}
+
+PG_FUNCTION_INFO_V1(url_path);
+Datum url_path(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+    char *c;
+    c = psprintf("%s", url->path);
+    PG_RETURN_CSTRING(c);   
+}
+
+
+PG_FUNCTION_INFO_V1(url_file); //path + query
+Datum url_file(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+    char *c;
+    c = psprintf("%s%s", url->path,url->query);
+    PG_RETURN_CSTRING(c);   
+}
+
+
+PG_FUNCTION_INFO_V1(url_port);
+Datum url_port(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+    int port = url->port;
+    PG_RETURN_INT32(port);   
+}
+
+
+PG_FUNCTION_INFO_V1(url_protocol);
+Datum url_protocol(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+    char *c;
+    c = url->scheme;
+    PG_RETURN_CSTRING(c);   
+}
+
+
+
+PG_FUNCTION_INFO_V1(url_query);
+Datum url_query(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+    char *c;
+    c = url->query;
+    PG_RETURN_CSTRING(c);   
+}
+
+
+PG_FUNCTION_INFO_V1(url_ref);
+Datum url_ref(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+    char *c;
+    c = url->fragment;
     PG_RETURN_CSTRING(c);   
 }
 
