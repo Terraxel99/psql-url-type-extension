@@ -11,22 +11,13 @@ PG_MODULE_MAGIC;
 PG_FUNCTION_INFO_V1(url_in);
 Datum url_in(PG_FUNCTION_ARGS) {
     char* input = PG_GETARG_CSTRING(0); 
+    UrlType* url = NULL;
 
-    UrlType *url = (UrlType *) palloc(VARHDRSZ + (73 * sizeof(char)));
+    int totalLength = strlen(input);
+    url = (UrlType *) palloc(VARHDRSZ + ((totalLength  + 9) * sizeof(char)) + (6 * sizeof(int)));
+    str_to_url(url, input);
 
-    SET_VARSIZE(url, VARHDRSZ + (73 * sizeof(char)));
-
-    url->scheme = (char *) malloc(7 * sizeof(char));
-    url->host = (char *) malloc(15 * sizeof(char));
-    url->path = (char *) malloc(18 * sizeof(char));
-    url->query = (char *) malloc(25 * sizeof(char));
-    url->fragment = (char *) malloc(8 * sizeof(char));
-
-    memcpy(url->scheme, "https:", 7);
-    memcpy(url->host, "//www.test.com", 15);
-    memcpy(url->path, "/some/path/to/url", 18);
-    memcpy(url->query, "?some=value&other=value2", 25);
-    memcpy(url->fragment, "#anchor", 8);
+    SET_VARSIZE(url, VARHDRSZ + ((totalLength + 9) * sizeof(char)) + (6 * sizeof(int)));
 
     PG_RETURN_POINTER(url);
 }
@@ -36,7 +27,8 @@ Datum url_out(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
 
     char *c;
-    c = psprintf("%s%s%s%s%s", url->scheme, url->host, url->path, url->query, url->fragment);
+    //c = psprintf("%s/*%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
+    c = psprintf("%s%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
 
     PG_RETURN_CSTRING(c);
 }
