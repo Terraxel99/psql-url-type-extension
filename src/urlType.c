@@ -45,7 +45,9 @@ void str_to_url(UrlType* url, char *spec) {
         return;
     }
 
-    check_port(url, spec, i, offset, totalLength);
+    //check_query(url, spec, i, offset, totalLength);
+    check_path(url, spec, i, offset, totalLength);
+    //check_port(url, spec, i, offset, totalLength);
 }
 
 void check_port(UrlType* url, char* spec, int startChar, char* offset, int totalLength) {
@@ -65,7 +67,9 @@ void check_port(UrlType* url, char* spec, int startChar, char* offset, int total
         url->port = 80;
     }
 
-    switch (spec[startChar]) {
+    check_path(url, spec, startChar, offset, totalLength);
+
+    /*switch (spec[startChar]) {
         case '/':
             check_path(url, spec, startChar, offset, totalLength);
             break;
@@ -77,7 +81,7 @@ void check_port(UrlType* url, char* spec, int startChar, char* offset, int total
             break;
         default:
             return;
-    }
+    }*/
 }
 
 void check_path(UrlType* url, char* spec, int startChar, char* offset, int totalLength) {
@@ -91,7 +95,9 @@ void check_path(UrlType* url, char* spec, int startChar, char* offset, int total
     url->path[url->pathLength - 1] = '\0';
     offset += url->pathLength - 1;
 
-    switch (spec[startChar]) {
+    check_query(url, spec, startChar, offset, totalLength);
+
+    /*switch (spec[startChar]) {
         case '?':
             check_query(url, spec, startChar, offset, totalLength);
             break;
@@ -100,7 +106,7 @@ void check_path(UrlType* url, char* spec, int startChar, char* offset, int total
             break;
         default:
             return;
-    }
+    }*/
 }
 
 void check_query(UrlType* url, char* spec, int startChar, char* offset, int totalLength) {
@@ -114,9 +120,9 @@ void check_query(UrlType* url, char* spec, int startChar, char* offset, int tota
     url->query[url->queryLength - 1] = '\0';
     offset += url->queryLength - 1;
 
-    if (spec[startChar] == '#') {
+    //if (spec[startChar] == '#') {
         check_fragment(url, spec, startChar, offset, totalLength);
-    }
+    //}
 }
 
 void check_fragment(UrlType* url, char* spec, int startChar, char* offset, int totalLength) {
@@ -126,6 +132,12 @@ void check_fragment(UrlType* url, char* spec, int startChar, char* offset, int t
     }
 
     url->fragment = (char *) malloc((url->fragmentLength) * sizeof(char));
+
+    if (url->fragmentLength == 1) {
+        url->fragment[0] = '\0';
+        return;
+    }
+
     memcpy(url->fragment, offset, url->fragmentLength);
     url->fragment[url->fragmentLength - 1] = '\0';
 }

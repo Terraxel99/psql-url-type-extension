@@ -14,10 +14,10 @@ Datum url_in(PG_FUNCTION_ARGS) {
     UrlType* url = NULL;
 
     int totalLength = strlen(input);
-    url = (UrlType *) palloc(VARHDRSZ + ((totalLength  + 9) * sizeof(char)) + (6 * sizeof(int)));
+    url = (UrlType *) palloc(VARHDRSZ + ((totalLength  + 5) * sizeof(char)) + sizeof(UrlType));
     str_to_url(url, input);
 
-    SET_VARSIZE(url, VARHDRSZ + ((totalLength + 9) * sizeof(char)) + (6 * sizeof(int)));
+    SET_VARSIZE(url, VARHDRSZ + ((totalLength + 5) * sizeof(char)) + sizeof(UrlType));
 
     PG_RETURN_POINTER(url);
 }
@@ -26,9 +26,14 @@ PG_FUNCTION_INFO_V1(url_out);
 Datum url_out(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
 
-    char *c;
-    //c = psprintf("%s/*%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
-    c = psprintf("%s%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
+    int totalLength = url->schemeLength + url->hostLength + url->pathLength + url->queryLength + url->fragmentLength + 1;
+    char* c = palloc(totalLength * sizeof(char));
+
+    strcpy(c, url->scheme);
+    strcat(c, url->host);
+    strcat(c, url->path);
+    strcat(c, url->query);
+    strcat(c, url->fragment);
 
     PG_RETURN_CSTRING(c);
 }
