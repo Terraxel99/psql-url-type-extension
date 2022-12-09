@@ -1,0 +1,44 @@
+Group members :
+
+- Gullentops Charlotte (ULBId : 463980)
+- Kohler Julien (ULBId : 521836)
+- Botond Horac Horvath(ULBId : 440356)
+- Dudziak Thomas (ULBId: 542286)
+
+==================================================================================================
+
+URL needs to be formatted correctly for the extension to work properly.
+URL parsing is working properly but isn't bulletproof. A string that doesn't represent a URL will make the extension crash.
+We thought the robustness wasn't the purpose of this project and concentrated our efforts on the core of the project.
+
+Here is a list of the Java functions and their names in our SQL extension (since having two functions with the same name but different signatures is impossible in C) :
+
+- URL(varchar spec)                                             : url_from_string
+- URL(varchar protocol, varchar host, int port, varchar file)   : url_from_phpf
+- URL(varchar protocol, varchar host, varchar file)             : url_from_phf
+- URL(URL context, varchar spec)                                : url_in_context
+- toString()                                                    : url_to_string
+- getProtocol()                                                 : url_scheme
+- getAuthority()                                                : url_authority
+- getHost()                                                     : url_host
+- getPath()                                                     : url_path
+- getPort()                                                     : url_port
+- getDefaultPort()                                              : url_default_port
+- getFile()                                                     : url_file
+- getProcotol()                                                 : url_protocol
+- getQuery()                                                    : url_query
+- getRef()                                                      : url_ref
+- getUserInfo()                                                 : url_userinfo
+- equals(URL url1, URL url2)                                    : url_equals
+- sameFile(URL url1, URL url2)                                  : url_same_file
+- sameHost(URL url1, URL url2)                                  : url_same_host
+
+Note that the 2 constructor functions "url_from_phpf" and "url_from_phf" accept arguments as string but require the protocol without ":", the host without the "//" and the file without the starting "/". Putting those characters will NOT make the extension crash but will create a URL with duplicate ":" and "/". Again, this is, for us, a parsing detail and not the core of the project. 
+
+The function "url_scheme" which returns the protocol returns the ":" with it. We decided it was a small detail and not really the objective of the project to concentrate on such a small detail.
+
+For the equality of the URLs, two URLs that have the same structure but one of them has no port and the other has the default port ARE equal. For example "https://www.test.com/path" and "https://www.test.com:443/path" ARE equal because default port of HTTPS is 443. But https://www.test.com/path" and "https://www.test.com:444/path" are NOT equal.
+
+For other equality concerns, it works in the way we think it should work and if it doesn't meet what is expected, we would be happy to discuss it.
+
+Finally, we tried to make the test SQL file as good as possible and tried to cover as much cases as we could.

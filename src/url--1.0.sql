@@ -36,6 +36,12 @@ CREATE FUNCTION url_from_phf(cstring, cstring, cstring) RETURNS url
     LANGUAGE C
     AS '$libdir/url';
 
+CREATE FUNCTION url_in_context(url, cstring) RETURNS url
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
 CREATE FUNCTION url_to_string(url) RETURNS cstring
     IMMUTABLE
     STRICT
