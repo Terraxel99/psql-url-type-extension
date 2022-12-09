@@ -64,6 +64,32 @@ Datum url_from_phpf(PG_FUNCTION_ARGS) {
     PG_RETURN_POINTER(url);
 }
 
+PG_FUNCTION_INFO_V1(url_in_context);
+Datum url_in_context(PG_FUNCTION_ARGS) {
+    UrlType* url = (UrlType*) PG_GETARG_POINTER(0);
+    char* spec = PG_GETARG_CSTRING(1); 
+    
+    UrlType* urlFromSpec = NULL;
+
+    int specLength = strlen(spec);
+    urlFromSpec = (UrlType *) palloc(VARHDRSZ + ((specLength  + 5) * sizeof(char)) + sizeof(UrlType));
+    SET_VARSIZE(urlFromSpec, VARHDRSZ + ((specLength + 5) * sizeof(char)) + sizeof(UrlType));
+    str_to_url(urlFromSpec, spec);
+
+    if (urlFromSpec->schemeLength > 1 && urlFromSpec->hostLength > 1) {
+        strcpy(url->scheme, urlFromSpec->scheme);
+        strcpy(urlFromSpec->host, url->host);
+    }
+
+    url->port = urlFromSpec->port;
+
+    strcpy(url->path, urlFromSpec->path);
+    strcpy(url->query, urlFromSpec->query);
+    strcpy(url->fragment, urlFromSpec->fragment);
+
+    PG_RETURN_POINTER(url);
+}
+
 PG_FUNCTION_INFO_V1(url_from_phf);
 Datum url_from_phf(PG_FUNCTION_ARGS) {
     char* inputProtocol = PG_GETARG_CSTRING(0);

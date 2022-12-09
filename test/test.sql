@@ -117,3 +117,7 @@ WHERE url_equals(Url, url_from_phf('https', 'www.perdu.com', 'path/to/page?someQ
 
 SELECT * FROM test 
 WHERE url_equals(Url, 'https://www.perdu.com/path/to/page?someQuery=1');
+
+-- Should return everything
+SELECT * FROM test 
+WHERE url_equals(Url, url_in_context(Url, 'https://www.perdu.com/path/to/page?someQuery=1'));

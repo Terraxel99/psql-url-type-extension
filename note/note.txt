@@ -35,6 +35,8 @@ Here is a list of the Java functions and their names in our SQL extension (since
 
 Note that the 2 constructor functions "url_from_phpf" and "url_from_phf" accept arguments as string but require the protocol without ":", the host without the "//" and the file without the starting "/". Putting those characters will NOT make the extension crash but will create a URL with duplicate ":" and "/". Again, this is, for us, a parsing detail and not the core of the project. 
 
+For the constructor with the context, we always put the path of "spec" into the URL and we replace scheme and host if both exist in spec.
+
 The function "url_scheme" which returns the protocol returns the ":" with it. We decided it was a small detail and not really the objective of the project to concentrate on such a small detail.
 
 For the equality of the URLs, two URLs that have the same structure but one of them has no port and the other has the default port ARE equal. For example "https://www.test.com/path" and "https://www.test.com:443/path" ARE equal because default port of HTTPS is 443. But https://www.test.com/path" and "https://www.test.com:444/path" are NOT equal.
@@ -42,3 +44,5 @@ For the equality of the URLs, two URLs that have the same structure but one of t
 For other equality concerns, it works in the way we think it should work and if it doesn't meet what is expected, we would be happy to discuss it.
 
 Finally, we tried to make the test SQL file as good as possible and tried to cover as much cases as we could.
+
+NB : Project was done and compiled on Ubuntu 20.04.
