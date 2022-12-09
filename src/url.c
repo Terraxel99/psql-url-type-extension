@@ -123,11 +123,11 @@ Datum url_equals(PG_FUNCTION_ARGS) {
     if(strcmp(url1->scheme,url2->scheme)!=0){
         PG_RETURN_BOOL(false);
     }
-    
+    /*
     if(url1->port!=url2->port){   
         PG_RETURN_BOOL(false);
     }
-    
+    */
     if(strcmp(url1->host,url2->host)!=0){
         PG_RETURN_BOOL(false);
     }
@@ -155,11 +155,11 @@ Datum url_same_file(PG_FUNCTION_ARGS) {
     if(strcmp(url1->scheme,url2->scheme)!=0){
         PG_RETURN_BOOL(false);
     }
-    
+    /* 
     if(url1->port!=url2->port){   
         PG_RETURN_BOOL(false);
     }
-    
+    */
     if(strcmp(url1->host,url2->host)!=0){
         PG_RETURN_BOOL(false);
     }

@@ -96,5 +96,101 @@ CREATE FUNCTION url_same_host(url,url) RETURNS boolean
     LANGUAGE C
     AS '$libdir/url';
 
+CREATE OR REPLACE FUNCTION url_eq(url, url) 
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8eq';
+
+CREATE OR REPLACE FUNCTION url_ne(url, url) 
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8ne';
+
+CREATE OR REPLACE FUNCTION url_lt(url, url) 
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8lt';
+
+CREATE OR REPLACE FUNCTION url_le(url, url) 
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8le';
+
+CREATE OR REPLACE FUNCTION url_gt(url, url) 
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8gt';
+
+CREATE OR REPLACE FUNCTION url_ge(url, url) 
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8ge';
+
+CREATE OR REPLACE FUNCTION url_cmp(url, url) 
+RETURNS integer LANGUAGE internal IMMUTABLE AS 'btint8cmp';
+
+CREATE OPERATOR = (
+	LEFTARG = url,
+	RIGHTARG = url,
+	PROCEDURE = url_eq,
+	COMMUTATOR = '=',
+	NEGATOR = '<>',
+	RESTRICT = eqsel,
+	JOIN = eqjoinsel
+);
+COMMENT ON OPERATOR =(url, url) IS 'equals?';
+
+CREATE OPERATOR <> (
+	LEFTARG = url,
+	RIGHTARG = url,
+	PROCEDURE = url_ne,
+	COMMUTATOR = '<>',
+	NEGATOR = '=',
+	RESTRICT = neqsel,
+	JOIN = neqjoinsel
+);
+COMMENT ON OPERATOR <>(url, url) IS 'not equals?';
+
+CREATE OPERATOR < (
+	LEFTARG = url,
+	RIGHTARG = url,
+	PROCEDURE = url_lt,
+	COMMUTATOR = > , 
+	NEGATOR = >= ,
+   	RESTRICT = scalarltsel, 
+	JOIN = scalarltjoinsel
+);
+COMMENT ON OPERATOR <(url, url) IS 'less-than';
+
+CREATE OPERATOR <= (
+	LEFTARG = url,
+	RIGHTARG = url,
+	PROCEDURE = url_le,
+	COMMUTATOR = >= , 
+	NEGATOR = > ,
+   	RESTRICT = scalarltsel, 
+	JOIN = scalarltjoinsel
+);
+COMMENT ON OPERATOR <=(url, url) IS 'less-than-or-equal';
+
+CREATE OPERATOR > (
+	LEFTARG = url,
+	RIGHTARG = url,
+	PROCEDURE = url_gt,
+	COMMUTATOR = < , 
+	NEGATOR = <= ,
+   	RESTRICT = scalargtsel, 
+	JOIN = scalargtjoinsel
+);
+COMMENT ON OPERATOR >(url, url) IS 'greater-than';
+
+CREATE OPERATOR >= (
+	LEFTARG = url,
+	RIGHTARG = url,
+	PROCEDURE = url_ge,
+	COMMUTATOR = <= , 
+	NEGATOR = < ,
+   	RESTRICT = scalargtsel, 
+	JOIN = scalargtjoinsel
+);
+COMMENT ON OPERATOR >=(url, url) IS 'greater-than-or-equal';
+
+CREATE OPERATOR CLASS btree_url_ops
+DEFAULT FOR TYPE url USING btree
+AS
+        OPERATOR        1       <  ,
+        OPERATOR        2       <= ,
+        OPERATOR        3       =  ,
+        OPERATOR        4       >= ,
+        OPERATOR        5       >  ,
+        FUNCTION        1       url_cmp(url, url);
 
 

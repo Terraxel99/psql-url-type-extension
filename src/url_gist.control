@@ -1,0 +1,6 @@
+# url extension
+comment = 'url GiST opclass support (exclusion constraints)'
+default_version = '1.0'
+module_pathname = '$libdir/btree_gist'
+relocatable = true
+requires = 'btree_gist, url'
