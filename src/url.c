@@ -38,7 +38,6 @@ Datum url_out(PG_FUNCTION_ARGS) {
     PG_RETURN_CSTRING(c);
 }
 
-
 PG_FUNCTION_INFO_V1(url_scheme);
 Datum url_scheme(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
@@ -49,7 +48,7 @@ Datum url_scheme(PG_FUNCTION_ARGS) {
     PG_RETURN_CSTRING(c);   
 }
 
-PG_FUNCTION_INFO_V1(url_authority); //host + port
+PG_FUNCTION_INFO_V1(url_authority); // Host + port
 Datum url_authority(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
 
@@ -77,8 +76,7 @@ Datum url_path(PG_FUNCTION_ARGS) {
     PG_RETURN_CSTRING(c);   
 }
 
-
-PG_FUNCTION_INFO_V1(url_file); //path + query
+PG_FUNCTION_INFO_V1(url_file); // Path + query
 Datum url_file(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
     char *c;
@@ -86,14 +84,12 @@ Datum url_file(PG_FUNCTION_ARGS) {
     PG_RETURN_CSTRING(c);   
 }
 
-
 PG_FUNCTION_INFO_V1(url_port);
 Datum url_port(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
     int port = url->port;
     PG_RETURN_INT32(port);   
 }
-
 
 PG_FUNCTION_INFO_V1(url_protocol);
 Datum url_protocol(PG_FUNCTION_ARGS) {
@@ -103,8 +99,6 @@ Datum url_protocol(PG_FUNCTION_ARGS) {
     PG_RETURN_CSTRING(c);   
 }
 
-
-
 PG_FUNCTION_INFO_V1(url_query);
 Datum url_query(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
@@ -112,7 +106,6 @@ Datum url_query(PG_FUNCTION_ARGS) {
     c = url->query;
     PG_RETURN_CSTRING(c);   
 }
-
 
 PG_FUNCTION_INFO_V1(url_ref);
 Datum url_ref(PG_FUNCTION_ARGS) {
@@ -126,47 +119,59 @@ PG_FUNCTION_INFO_V1(url_equals);
 Datum url_equals(PG_FUNCTION_ARGS) {
     UrlType *url1 = (UrlType *) PG_GETARG_POINTER(0);
     UrlType *url2 = (UrlType *) PG_GETARG_POINTER(1);
+    
     if(strcmp(url1->scheme,url2->scheme)!=0){
         PG_RETURN_BOOL(false);
     }
+    
     if(url1->port!=url2->port){   
         PG_RETURN_BOOL(false);
     }
+    
     if(strcmp(url1->host,url2->host)!=0){
         PG_RETURN_BOOL(false);
     }
+    
     if(strcmp(url1->path,url2->path)!=0){
         PG_RETURN_BOOL(false);
     }
+    
     if(strcmp(url1->scheme,url2->scheme)!=0){
         PG_RETURN_BOOL(false);
     }
+    
     if(strcmp(url1->fragment,url2->fragment)!=0){
         PG_RETURN_BOOL(false);
     }
+    
     PG_RETURN_BOOL(true);
 }
-
 
 PG_FUNCTION_INFO_V1(url_same_file);
 Datum url_same_file(PG_FUNCTION_ARGS) {
     UrlType *url1 = (UrlType *) PG_GETARG_POINTER(0);
     UrlType *url2 = (UrlType *) PG_GETARG_POINTER(1);
+    
     if(strcmp(url1->scheme,url2->scheme)!=0){
         PG_RETURN_BOOL(false);
     }
+    
     if(url1->port!=url2->port){   
         PG_RETURN_BOOL(false);
     }
+    
     if(strcmp(url1->host,url2->host)!=0){
         PG_RETURN_BOOL(false);
     }
+    
     if(strcmp(url1->path,url2->path)!=0){
         PG_RETURN_BOOL(false);
     }
+
     if(strcmp(url1->scheme,url2->scheme)!=0){
         PG_RETURN_BOOL(false);
     }
+
     PG_RETURN_BOOL(true);
 }
 
@@ -179,18 +184,3 @@ Datum url_same_host(PG_FUNCTION_ARGS) {
     }
     PG_RETURN_BOOL(true);
 }
-/*
-PG_FUNCTION_INFO_V1(url_same_host);
-Datum url_default_port(PG_FUNCTION_ARGS) {
-    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
-    if(strcmp(url->host,"http://")!=0){
-        PG_RETURN_BOOL(false);
-    }
-    PG_RETURN_BOOL(true);
-}
-*/
-   
-
-
-
-
