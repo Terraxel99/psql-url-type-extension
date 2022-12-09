@@ -154,3 +154,27 @@ int default_port_of(char* scheme) {
     
     return 0;
 }
+
+bool are_port_equal(UrlType* url1, UrlType* url2) {
+    if (url1->port != 0 || url2->port != 0) {
+        if (url1->port != url2->port) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+char* url_to_str(UrlType* url) {
+    char *c;
+
+    // If port is 0, then is wasn't given at construction AND,
+    // No default port could be found
+    if (url->port == 0) {
+        c = psprintf("%s%s%s%s%s", url->scheme, url->host, url->path, url->query, url->fragment);
+    } else {
+        c = psprintf("%s%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
+    }
+
+    return c;
+}

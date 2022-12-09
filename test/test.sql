@@ -5,7 +5,7 @@ DROP EXTENSION IF EXISTS url;
 CREATE EXTENSION url;
 
 CREATE TABLE test (
-        Id INT PRIMARY KEY,
+    Id INT PRIMARY KEY,
     Url url NOT NULL
 );
 
@@ -29,7 +29,8 @@ VALUES  (1 ,'https://www.perdu.com'),
     (17 ,'nntp://172.39.29.12:2593/'),
     (18 ,'ntp://128.102.39.1'),
     (19 ,'ftps://192.168.1.19/path/to/folder?someArgument=test'),
-    (20 ,'tftp://192.168.0.93/path/to/folder');
+    (20 ,'tftp://192.168.0.93/path/to/folder'),
+    (21 ,'http://totojr@www.perdu.com/path/to/page#stillAnAnchor');
 
 SELECT * from test;
 
@@ -63,6 +64,14 @@ FROM test;
 SELECT Id, url_ref(Url) -- Fragment 
 FROM test;
 
+SELECT Id, url_to_string(Url)
+FROM test;
+
+SELECT Id, Url, url_userinfo(Url)
+FROM test;
+
+SELECT Id, Url, (Url)
+
 CREATE TABLE test_equals (
     Id INT PRIMARY KEY,
     Url1 url NOT NULL,
@@ -85,3 +94,16 @@ FROM test_equals;
 
 SELECT Id, url_same_host(Url1,Url2) -- =url equals 
 FROM test_equals;
+
+SELECT * FROM test 
+WHERE url_equals(Url, 'https://www.perdu.com/path/to/page?someQuery=1');
+
+SELECT * FROM test 
+WHERE url_equals(Url, url_from_string('https://www.perdu.com/path/to/page?someQuery=1'));
+
+SELECT * FROM test
+WHERE url_equals(Url, url_from_phpf('https', 'www.perdu.com', 443,'path/to/page?someQuery=1'));
+
+SELECT * FROM test
+WHERE url_equals(Url, url_from_phf('https', 'www.perdu.com', 'path/to/page?someQuery=1'));
+

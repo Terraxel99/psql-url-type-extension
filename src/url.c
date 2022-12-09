@@ -26,17 +26,60 @@ PG_FUNCTION_INFO_V1(url_out);
 Datum url_out(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
 
-    char* c;
-
-    // If port is 0, then is wasn't given at construction AND,
-    // No default port could be found
-    if (url->port == 0) {
-        c = psprintf("%s%s%s%s%s", url->scheme, url->host, url->path, url->query, url->fragment);
-    } else {
-        c = psprintf("%s%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
-    }
+    char* c = url_to_str(url);
 
     PG_RETURN_CSTRING(c);
+}
+
+PG_FUNCTION_INFO_V1(url_from_string);
+Datum url_from_string(PG_FUNCTION_ARGS) {
+    char* input = PG_GETARG_CSTRING(0); 
+    UrlType* url = NULL;
+
+    int totalLength = strlen(input);
+    url = (UrlType *) palloc(VARHDRSZ + ((totalLength  + 5) * sizeof(char)) + sizeof(UrlType));
+    str_to_url(url, input);
+
+    SET_VARSIZE(url, VARHDRSZ + ((totalLength + 5) * sizeof(char)) + sizeof(UrlType));
+
+    PG_RETURN_POINTER(url);
+}
+
+PG_FUNCTION_INFO_V1(url_from_phpf);
+Datum url_from_phpf(PG_FUNCTION_ARGS) {
+    char* inputProtocol = PG_GETARG_CSTRING(0);
+    char* inputHost = PG_GETARG_CSTRING(1);
+    int inputPort = PG_GETARG_INT32(2);
+    char* inputPathQuery = PG_GETARG_CSTRING(3);
+
+    UrlType* url = NULL;
+
+    char* inputStr = psprintf("%s://%s:%d/%s", inputProtocol, inputHost, inputPort, inputPathQuery);
+    int totalLength = strlen(inputStr);
+    url = (UrlType *) palloc(VARHDRSZ + ((totalLength  + 5) * sizeof(char)) + sizeof(UrlType));
+
+    SET_VARSIZE(url, VARHDRSZ + ((totalLength + 5) * sizeof(char)) + sizeof(UrlType));
+    str_to_url(url, inputStr);
+
+    PG_RETURN_POINTER(url);
+}
+
+PG_FUNCTION_INFO_V1(url_from_phf);
+Datum url_from_phf(PG_FUNCTION_ARGS) {
+    char* inputProtocol = PG_GETARG_CSTRING(0);
+    char* inputHost = PG_GETARG_CSTRING(1);
+    char* inputPathQuery = PG_GETARG_CSTRING(2);
+
+    UrlType* url = NULL;
+
+    char* inputStr = psprintf("%s://%s/%s", inputProtocol, inputHost, inputPathQuery);
+    int totalLength = strlen(inputStr);
+    url = (UrlType *) palloc(VARHDRSZ + ((totalLength  + 5) * sizeof(char)) + sizeof(UrlType));
+
+    SET_VARSIZE(url, VARHDRSZ + ((totalLength + 5) * sizeof(char)) + sizeof(UrlType));
+    str_to_url(url, inputStr);
+
+    PG_RETURN_POINTER(url);
 }
 
 PG_FUNCTION_INFO_V1(url_scheme);
@@ -46,7 +89,7 @@ Datum url_scheme(PG_FUNCTION_ARGS) {
     char *c;
     c = psprintf("%s", url->scheme);
 
-    PG_RETURN_CSTRING(c);   
+    PG_RETURN_CSTRING(c);
 }
 
 PG_FUNCTION_INFO_V1(url_authority); // Host + port
@@ -134,32 +177,60 @@ Datum url_ref(PG_FUNCTION_ARGS) {
     PG_RETURN_CSTRING(c);   
 }
 
+PG_FUNCTION_INFO_V1(url_to_string);
+Datum url_to_string(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+
+    char* c = url_to_str(url);
+
+    PG_RETURN_CSTRING(c);
+}
+
+PG_FUNCTION_INFO_V1(url_userinfo);
+Datum url_userinfo(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+    
+    char* host = palloc(url->hostLength * sizeof(char));
+    char * splitted; 
+    
+    strcpy(host, url->host);
+    splitted = strtok(host, "@");
+
+    // If no @ was found, return NULL.
+    if (strtok(NULL, "@") == NULL) {
+        PG_RETURN_NULL();
+    }
+
+    // Removing "//" from host.
+    PG_RETURN_CSTRING(splitted + (2 * sizeof(char)));
+}
+
 PG_FUNCTION_INFO_V1(url_equals);
 Datum url_equals(PG_FUNCTION_ARGS) {
     UrlType *url1 = (UrlType *) PG_GETARG_POINTER(0);
     UrlType *url2 = (UrlType *) PG_GETARG_POINTER(1);
     
-    if(strcmp(url1->scheme,url2->scheme)!=0){
+    if (strcmp(url1->scheme,url2->scheme)!=0){
         PG_RETURN_BOOL(false);
     }
-    /*
-    if(url1->port!=url2->port){   
+
+    if (!are_port_equal(url1, url2)) {
         PG_RETURN_BOOL(false);
     }
-    */
-    if(strcmp(url1->host,url2->host)!=0){
-        PG_RETURN_BOOL(false);
-    }
-    
-    if(strcmp(url1->path,url2->path)!=0){
+
+    if (strcmp(url1->host,url2->host)!=0){
         PG_RETURN_BOOL(false);
     }
     
-    if(strcmp(url1->scheme,url2->scheme)!=0){
+    if (strcmp(url1->path,url2->path)!=0){
         PG_RETURN_BOOL(false);
     }
     
-    if(strcmp(url1->fragment,url2->fragment)!=0){
+    if (strcmp(url1->scheme,url2->scheme)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    
+    if (strcmp(url1->fragment,url2->fragment)!=0){
         PG_RETURN_BOOL(false);
     }
     
@@ -171,23 +242,23 @@ Datum url_same_file(PG_FUNCTION_ARGS) {
     UrlType *url1 = (UrlType *) PG_GETARG_POINTER(0);
     UrlType *url2 = (UrlType *) PG_GETARG_POINTER(1);
     
-    if(strcmp(url1->scheme,url2->scheme)!=0){
-        PG_RETURN_BOOL(false);
-    }
-    /* 
-    if(url1->port!=url2->port){   
-        PG_RETURN_BOOL(false);
-    }
-    */
-    if(strcmp(url1->host,url2->host)!=0){
+    if (strcmp(url1->scheme,url2->scheme)!=0){
         PG_RETURN_BOOL(false);
     }
     
-    if(strcmp(url1->path,url2->path)!=0){
+    if (!are_port_equal(url1, url2)) {
+        PG_RETURN_BOOL(false);
+    }
+    
+    if (strcmp(url1->host,url2->host)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    
+    if (strcmp(url1->path,url2->path)!=0){
         PG_RETURN_BOOL(false);
     }
 
-    if(strcmp(url1->scheme,url2->scheme)!=0){
+    if (strcmp(url1->scheme,url2->scheme)!=0){
         PG_RETURN_BOOL(false);
     }
 
@@ -199,7 +270,7 @@ Datum url_same_host(PG_FUNCTION_ARGS) {
     UrlType *url1 = (UrlType *) PG_GETARG_POINTER(0);
     UrlType *url2 = (UrlType *) PG_GETARG_POINTER(1);
     
-    if(strcmp(url1->host,url2->host)!=0){
+    if (strcmp(url1->host,url2->host)!=0){
         PG_RETURN_BOOL(false);
     }
 

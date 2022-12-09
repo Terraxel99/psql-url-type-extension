@@ -18,6 +18,30 @@ CREATE TYPE url (
 );
 COMMENT ON TYPE url IS 'URL written as a string';
 
+CREATE FUNCTION url_from_string(cstring) RETURNS url
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+CREATE FUNCTION url_from_phpf(cstring, cstring, integer, cstring) RETURNS url
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+CREATE FUNCTION url_from_phf(cstring, cstring, cstring) RETURNS url
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+CREATE FUNCTION url_to_string(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
 CREATE FUNCTION url_scheme(url) RETURNS cstring 
     IMMUTABLE
     STRICT
@@ -35,7 +59,6 @@ CREATE FUNCTION url_host(url) RETURNS cstring
     STRICT
     LANGUAGE C
     AS '$libdir/url';
-
 
 CREATE FUNCTION url_path(url) RETURNS cstring
     IMMUTABLE
@@ -74,6 +97,12 @@ CREATE FUNCTION url_query(url) RETURNS cstring
     AS '$libdir/url';
 
 CREATE FUNCTION url_ref(url) RETURNS cstring
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+CREATE FUNCTION url_userinfo(url) RETURNS cstring
     IMMUTABLE
     STRICT
     LANGUAGE C

@@ -30,7 +30,9 @@ typedef struct UrlType {
 } UrlType;
 
 void str_to_url(UrlType* url, char* spec);
+char* url_to_str(UrlType* url);
 bool char_is_digit(char c);
+bool are_port_equal(UrlType* url1, UrlType* url2);
 int default_port_of(char* scheme);
 void check_port(UrlType* url, char* spec, int startChar, char* offset, int totalLength);
 void check_path(UrlType* url, char* spec, int startChar, char* offset, int totalLength);
