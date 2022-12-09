@@ -22,9 +22,19 @@ VALUES  (1 ,'https://www.perdu.com'),
     (10 ,'http://www.perdu.com/path/to/page#stillAnAnchor'),
     (11 ,'http://192.168.0.93/'),
     (12 ,'ftp://192.168.0.93/path/to/folder'),
-    (13 ,'someunknownprotocol://192.168.0.93/path/to/folder');
+    (13 ,'someunknownprotocol://192.168.0.93/path/to/folder'),
+    (14 ,'ssh://192.168.0.93/'),
+    (15 ,'ssh://192.168.0.93'),
+    (16 ,'telnet://192.168.29.93/'),
+    (17 ,'nntp://172.39.29.12:2593/'),
+    (18 ,'ntp://128.102.39.1'),
+    (19 ,'ftps://192.168.1.19/path/to/folder?someArgument=test'),
+    (20 ,'tftp://192.168.0.93/path/to/folder');
 
 SELECT * from test;
+
+SELECT Id, url_scheme(Url), url_default_port(Url), url_port(Url)
+FROM test;
 
 SELECT Id, url_scheme(Url)
 FROM test;

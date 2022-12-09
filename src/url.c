@@ -89,7 +89,25 @@ PG_FUNCTION_INFO_V1(url_port);
 Datum url_port(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
     int port = url->port;
-    PG_RETURN_INT32(port);   
+
+    if (port == 0) {
+        PG_RETURN_NULL();
+    } else {
+        PG_RETURN_INT32(port);   
+    }
+}
+
+PG_FUNCTION_INFO_V1(url_default_port);
+Datum url_default_port(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType*) PG_GETARG_POINTER(0);
+
+    int defaultPort = default_port_of(url->scheme);
+
+    if (defaultPort == 0) {
+        PG_RETURN_NULL();
+    } else {
+        PG_RETURN_INT32(defaultPort);
+    }
 }
 
 PG_FUNCTION_INFO_V1(url_protocol);
@@ -180,8 +198,10 @@ PG_FUNCTION_INFO_V1(url_same_host);
 Datum url_same_host(PG_FUNCTION_ARGS) {
     UrlType *url1 = (UrlType *) PG_GETARG_POINTER(0);
     UrlType *url2 = (UrlType *) PG_GETARG_POINTER(1);
+    
     if(strcmp(url1->host,url2->host)!=0){
         PG_RETURN_BOOL(false);
     }
+
     PG_RETURN_BOOL(true);
 }

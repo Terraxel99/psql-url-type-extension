@@ -30,7 +30,6 @@ CREATE FUNCTION url_authority(url) RETURNS cstring
     LANGUAGE C
     AS '$libdir/url';
 
-
 CREATE FUNCTION url_host(url) RETURNS cstring
     IMMUTABLE
     STRICT
@@ -50,6 +49,11 @@ CREATE FUNCTION url_port(url) RETURNS integer
     LANGUAGE C
     AS '$libdir/url';
 
+CREATE FUNCTION url_default_port(url) RETURNS integer
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
 
 CREATE FUNCTION url_file(url) RETURNS cstring
     IMMUTABLE
@@ -57,13 +61,11 @@ CREATE FUNCTION url_file(url) RETURNS cstring
     LANGUAGE C
     AS '$libdir/url';
 
-
 CREATE FUNCTION url_protocol(url) RETURNS cstring
     IMMUTABLE
     STRICT
     LANGUAGE C
     AS '$libdir/url';
-
 
 CREATE FUNCTION url_query(url) RETURNS cstring
     IMMUTABLE
@@ -76,7 +78,6 @@ CREATE FUNCTION url_ref(url) RETURNS cstring
     STRICT
     LANGUAGE C
     AS '$libdir/url';
-
 
 CREATE FUNCTION url_equals(url,url) RETURNS boolean
     IMMUTABLE

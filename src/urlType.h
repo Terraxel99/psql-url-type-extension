@@ -3,11 +3,9 @@
 
 #include "postgres.h"
 
-
 #define DEFAULT_PORT_FTP 21
 #define DEFAULT_PORT_SSH 22
 #define DEFAULT_PORT_TELNET 23
-#define DEFAULT_PORT_SMTP 25
 #define DEFAULT_PORT_HTTP 80
 #define DEFAULT_PORT_NNTP 119
 #define DEFAULT_PORT_NTP 123
