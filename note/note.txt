@@ -45,4 +45,5 @@ For other equality concerns, it works in the way we think it should work and if 
 
 Finally, we tried to make the test SQL file as good as possible and tried to cover as much cases as we could.
 
-NB : Project was done and compiled on Ubuntu 20.04.
+NB : Project was done and compiled on Ubuntu 20.04. Please recompile before running.
+NB 2 : SQL Test script is available in the "test" folder and source code under "src" folder.
