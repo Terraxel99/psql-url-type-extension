@@ -128,10 +128,6 @@ int default_port_of(char* scheme) {
         return DEFAULT_PORT_TELNET;
     }
     
-    if (strcmp(scheme, "smtp:") == 0) {
-        return DEFAULT_PORT_SMTP;
-    }
-    
     if (strcmp(scheme, "http:") == 0) {
         return DEFAULT_PORT_HTTP;
     }
@@ -158,4 +154,3 @@ int default_port_of(char* scheme) {
     
     return 0;
 }
-
