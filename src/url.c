@@ -26,14 +26,16 @@ PG_FUNCTION_INFO_V1(url_out);
 Datum url_out(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
 
-    int totalLength = url->schemeLength + url->hostLength + url->pathLength + url->queryLength + url->fragmentLength + 1;
-    char* c = palloc(totalLength * sizeof(char));
+    char* c;
 
-    strcpy(c, url->scheme);
-    strcat(c, url->host);
-    strcat(c, url->path);
-    strcat(c, url->query);
-    strcat(c, url->fragment);
+    // If port is 0, then is wasn't given at construction
+    // And no default port could be found
+    if (url->port == 0) {
+        c = psprintf("%s%s%s%s%s", url->scheme, url->host, url->path, url->query, url->fragment);
+    } else {
+        c = psprintf("%s%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
+    }
+
 
     PG_RETURN_CSTRING(c);
 }

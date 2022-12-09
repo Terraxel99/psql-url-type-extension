@@ -41,14 +41,16 @@ void str_to_url(UrlType* url, char *spec) {
     url->host[url->hostLength - 1] = '\0';
     offset += url->hostLength - 1;
 
-    check_path(url, spec, i, offset, totalLength);
+    check_port(url, spec, i, offset, totalLength);
+    //check_path(url, spec, i, offset, totalLength);
 }
 
 void check_port(UrlType* url, char* spec, int startChar, char* offset, int totalLength) {
+    url->port = 0;
+
     if (spec[startChar] == ':') {
         startChar++;
         offset++;
-        url->port = 0;
 
         while(char_is_digit(spec[startChar])) {
             url->port = url->port * 10 + (spec[startChar] - '0');
@@ -58,7 +60,7 @@ void check_port(UrlType* url, char* spec, int startChar, char* offset, int total
     } 
     
     if (url->port == 0) {
-        url->port = 80;
+        url->port default_port_of(url->scheme);
     }
 
     check_path(url, spec, startChar, offset, totalLength);
@@ -111,5 +113,9 @@ void check_fragment(UrlType* url, char* spec, int startChar, char* offset, int t
 
 bool char_is_digit(char c) {
     return c >= '0' && c <= '9';
+}
+
+int default_port_of(char* scheme) {
+    return 80;
 }
 

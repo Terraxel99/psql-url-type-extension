@@ -95,6 +95,3 @@ CREATE FUNCTION url_same_host(url,url) RETURNS boolean
     STRICT
     LANGUAGE C
     AS '$libdir/url';
-
-
-

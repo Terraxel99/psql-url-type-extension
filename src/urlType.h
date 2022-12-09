@@ -8,6 +8,7 @@ typedef struct UrlType {
     int port;
     int schemeLength;
     int hostLength;
+    int portLength;
     int pathLength;
     int queryLength;
     int fragmentLength;
@@ -20,6 +21,7 @@ typedef struct UrlType {
 
 void str_to_url(UrlType* url, char* spec);
 bool char_is_digit(char c);
+int default_port_of(char* scheme);
 void check_port(UrlType* url, char* spec, int startChar, char* offset, int totalLength);
 void check_path(UrlType* url, char* spec, int startChar, char* offset, int totalLength);
 void check_query(UrlType* url, char* spec, int startChar, char* offset, int totalLength);

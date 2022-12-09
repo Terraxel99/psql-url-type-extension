@@ -72,4 +72,3 @@ FROM test_equals;
 
 SELECT Id, url_same_host(Url1,Url2) -- =url equals 
 FROM test_equals;
-
