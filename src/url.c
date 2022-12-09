@@ -28,14 +28,13 @@ Datum url_out(PG_FUNCTION_ARGS) {
 
     char* c;
 
-    // If port is 0, then is wasn't given at construction
-    // And no default port could be found
+    // If port is 0, then is wasn't given at construction AND,
+    // No default port could be found
     if (url->port == 0) {
         c = psprintf("%s%s%s%s%s", url->scheme, url->host, url->path, url->query, url->fragment);
     } else {
         c = psprintf("%s%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
     }
-
 
     PG_RETURN_CSTRING(c);
 }

@@ -18,8 +18,11 @@ VALUES  (1 ,'https://www.perdu.com'),
     (6 ,'https://www.perdu.com/path/to/page/'),
     (7 ,'https://www.perdu.com/path/to/page?someQuery=1&someOtherQuery=2#someAnchorAgain'),
     (8 ,'https://www.perdu.com/path/to/page#stillAnAnchor'),
-    (9 ,'http://192.168.0.93/'),
-    (10 ,'ftp://192.168.0.93/path/to/folder');
+    (9 ,'https://www.perdu.com/path/to/page#stillAnAnchor'),
+    (10 ,'http://www.perdu.com/path/to/page#stillAnAnchor'),
+    (11 ,'http://192.168.0.93/'),
+    (12 ,'ftp://192.168.0.93/path/to/folder'),
+    (13 ,'someunknownprotocol://192.168.0.93/path/to/folder');
 
 SELECT * from test;
 

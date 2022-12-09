@@ -60,7 +60,7 @@ void check_port(UrlType* url, char* spec, int startChar, char* offset, int total
     } 
     
     if (url->port == 0) {
-        url->port default_port_of(url->scheme);
+        url->port = default_port_of(url->scheme);
     }
 
     check_path(url, spec, startChar, offset, totalLength);
@@ -116,6 +116,46 @@ bool char_is_digit(char c) {
 }
 
 int default_port_of(char* scheme) {
-    return 80;
+    if (strcmp(scheme, "ftp:") == 0) {
+        return DEFAULT_PORT_FTP;
+    }
+    
+    if (strcmp(scheme, "ssh:") == 0) {
+        return DEFAULT_PORT_SSH;
+    }
+    
+    if (strcmp(scheme, "telnet:") == 0) {
+        return DEFAULT_PORT_TELNET;
+    }
+    
+    if (strcmp(scheme, "smtp:") == 0) {
+        return DEFAULT_PORT_SMTP;
+    }
+    
+    if (strcmp(scheme, "http:") == 0) {
+        return DEFAULT_PORT_HTTP;
+    }
+    
+    if (strcmp(scheme, "https:") == 0) {
+        return DEFAULT_PORT_HTTPS;
+    }
+    
+    if (strcmp(scheme, "nntp:") == 0) {
+        return DEFAULT_PORT_NNTP;
+    }
+    
+    if (strcmp(scheme, "ntp:") == 0) {
+        return DEFAULT_PORT_NTP;
+    }
+    
+    if (strcmp(scheme, "ftps:") == 0) {
+        return DEFAULT_PORT_FTPS;
+    }
+    
+    if (strcmp(scheme, "tftp:") == 0) {
+        return DEFAULT_PORT_TFTP;
+    }
+    
+    return 0;
 }
 
