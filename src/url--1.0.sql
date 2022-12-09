@@ -76,3 +76,25 @@ CREATE FUNCTION url_ref(url) RETURNS cstring
     STRICT
     LANGUAGE C
     AS '$libdir/url';
+
+
+CREATE FUNCTION url_equals(url,url) RETURNS boolean
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+CREATE FUNCTION url_same_file(url,url) RETURNS boolean
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+CREATE FUNCTION url_same_host(url,url) RETURNS boolean
+    IMMUTABLE
+    STRICT
+    LANGUAGE C
+    AS '$libdir/url';
+
+
+

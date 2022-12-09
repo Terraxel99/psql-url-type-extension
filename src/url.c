@@ -14,10 +14,10 @@ Datum url_in(PG_FUNCTION_ARGS) {
     UrlType* url = NULL;
 
     int totalLength = strlen(input);
-    url = (UrlType *) palloc(VARHDRSZ + ((totalLength  + 9) * sizeof(char)) + (6 * sizeof(int)));
+    url = (UrlType *) palloc(VARHDRSZ + ((totalLength  + 5) * sizeof(char)) + sizeof(UrlType));
     str_to_url(url, input);
 
-    SET_VARSIZE(url, VARHDRSZ + ((totalLength + 9) * sizeof(char)) + (6 * sizeof(int)));
+    SET_VARSIZE(url, VARHDRSZ + ((totalLength + 5) * sizeof(char)) + sizeof(UrlType));
 
     PG_RETURN_POINTER(url);
 }
@@ -26,12 +26,18 @@ PG_FUNCTION_INFO_V1(url_out);
 Datum url_out(PG_FUNCTION_ARGS) {
     UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
 
-    char *c;
-    //c = psprintf("%s/*%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
-    c = psprintf("%s%s:%d%s%s%s", url->scheme, url->host, url->port, url->path, url->query, url->fragment);
+    int totalLength = url->schemeLength + url->hostLength + url->pathLength + url->queryLength + url->fragmentLength + 1;
+    char* c = palloc(totalLength * sizeof(char));
+
+    strcpy(c, url->scheme);
+    strcat(c, url->host);
+    strcat(c, url->path);
+    strcat(c, url->query);
+    strcat(c, url->fragment);
 
     PG_RETURN_CSTRING(c);
 }
+
 
 PG_FUNCTION_INFO_V1(url_scheme);
 Datum url_scheme(PG_FUNCTION_ARGS) {
@@ -115,6 +121,76 @@ Datum url_ref(PG_FUNCTION_ARGS) {
     c = url->fragment;
     PG_RETURN_CSTRING(c);   
 }
+
+PG_FUNCTION_INFO_V1(url_equals);
+Datum url_equals(PG_FUNCTION_ARGS) {
+    UrlType *url1 = (UrlType *) PG_GETARG_POINTER(0);
+    UrlType *url2 = (UrlType *) PG_GETARG_POINTER(1);
+    if(strcmp(url1->scheme,url2->scheme)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    if(url1->port!=url2->port){   
+        PG_RETURN_BOOL(false);
+    }
+    if(strcmp(url1->host,url2->host)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    if(strcmp(url1->path,url2->path)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    if(strcmp(url1->scheme,url2->scheme)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    if(strcmp(url1->fragment,url2->fragment)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    PG_RETURN_BOOL(true);
+}
+
+
+PG_FUNCTION_INFO_V1(url_same_file);
+Datum url_same_file(PG_FUNCTION_ARGS) {
+    UrlType *url1 = (UrlType *) PG_GETARG_POINTER(0);
+    UrlType *url2 = (UrlType *) PG_GETARG_POINTER(1);
+    if(strcmp(url1->scheme,url2->scheme)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    if(url1->port!=url2->port){   
+        PG_RETURN_BOOL(false);
+    }
+    if(strcmp(url1->host,url2->host)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    if(strcmp(url1->path,url2->path)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    if(strcmp(url1->scheme,url2->scheme)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    PG_RETURN_BOOL(true);
+}
+
+PG_FUNCTION_INFO_V1(url_same_host);
+Datum url_same_host(PG_FUNCTION_ARGS) {
+    UrlType *url1 = (UrlType *) PG_GETARG_POINTER(0);
+    UrlType *url2 = (UrlType *) PG_GETARG_POINTER(1);
+    if(strcmp(url1->host,url2->host)!=0){
+        PG_RETURN_BOOL(false);
+    }
+    PG_RETURN_BOOL(true);
+}
+/*
+PG_FUNCTION_INFO_V1(url_same_host);
+Datum url_default_port(PG_FUNCTION_ARGS) {
+    UrlType *url = (UrlType *) PG_GETARG_POINTER(0);
+    if(strcmp(url->host,"http://")!=0){
+        PG_RETURN_BOOL(false);
+    }
+    PG_RETURN_BOOL(true);
+}
+*/
+   
+
 
 
 

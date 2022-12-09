@@ -1,5 +1,7 @@
     DROP TABLE IF EXISTS test;
+    DROP TABLE IF EXISTS test_equals;
     DROP EXTENSION IF EXISTS url;
+
 
     CREATE EXTENSION url;
 
@@ -9,9 +11,16 @@
     );
 
     INSERT INTO test (Id, Url)
-    VALUES  (1 ,'http://www.postgresql.org:253/x?a#somefra'),
-            (2 ,'http://www.perdu.com:45/aa?zz#somefra'),
-            (3 ,'http://www.test.com:45?aaaa#somefra');
+    VALUES  (1 ,'https://www.perdu.com'),
+        (2 ,'https://www.perdu.com?someQuery=1'),
+        (3 ,'https://www.perdu.com#someAnchor'),
+        (4 ,'https://www.perdu.com?someQuery=1#someAnchor'),
+        (5 ,'https://www.perdu.com/path/to/page'),
+        (6 ,'https://www.perdu.com/path/to/page/'),
+        (7 ,'https://www.perdu.com/path/to/page?someQuery=1&someOtherQuery=2#someAnchorAgain'),
+        (8 ,'https://www.perdu.com/path/to/page#stillAnAnchor'),
+        (9 ,'http://192.168.0.93/'),
+        (10 ,'ftp://192.168.0.93/path/to/folder');
 
     SELECT * from test;
 
@@ -42,12 +51,27 @@
     SELECT Id, url_ref(Url) -- =fragment 
     FROM test;
 
+    CREATE TABLE test_equals (
+        Id INT PRIMARY KEY,
+        Url1 url NOT NULL,
+        Url2 url NOT NULL
+    );
 
+    INSERT INTO test_equals (Id, Url1, Url2)
+    VALUES  (1 ,'http://www.postgresql.org:253/x?a#somefra','http://www.perdu.com:45/aa?zz#somefra'),
+            (2 ,'http://www.perdu.com:45/aa?zz#somefra','http://www.test.com:45?aaaa#somefra'),
+            (3 ,'http://www.test.com:45?aaaa#somefra','http://www.test.com:45?aaaa#somefra');
 
+    INSERT INTO test_equals (Id, Url1, Url2)
+    VALUES  (4 ,'http://www.test.com:45/haha?aaaa#somefrsssa','http://www.test.com:45/haha?aaaa#somefra');
+    
 
-    INSERT INTO test (Id, Url)
-    VALUES  (1 ,'http://www.postgresql.org:253/x?a#somefra'),
-            (2 ,'http://www.perdu.com:45/aa?zz#somefra'),
-            (3 ,'http://www.test.com:45?aaaa#somefra'),
-            --(4 ,'ftp://192.168.0.39/a');
-            (5 ,'https://en.cppreference.com/w/c?a');
+    SELECT Id, url_equals(Url1,Url2) -- =url equals 
+    FROM test_equals;
+
+    SELECT Id, url_same_file(Url1,Url2) -- =url equals 
+    FROM test_equals;
+
+    SELECT Id, url_same_host(Url1,Url2) -- =url equals 
+    FROM test_equals;
+
